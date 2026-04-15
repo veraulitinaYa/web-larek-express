@@ -4,6 +4,7 @@ import productRoutes from './routes/product';
 
 import productModel from './models/product';
 import cors from 'cors';
+import path from 'path';
 
 //import { MongoClient } from 'mongodb';
 
@@ -17,6 +18,10 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 app.use(productRoutes);
+app.use(
+  '/images',
+  express.static(path.join(__dirname, 'dump/images'))
+);
 
 mongoose.connect('mongodb://localhost:27017/weblarek')
   .then(() => console.log('Подключено к MongoDB'))
