@@ -6,9 +6,11 @@ import orderRoutes from './routes/order';
 import productModel from './models/product';
 import cors from 'cors';
 import path from 'path';
+import { requestLogger, errorLogger } from './middlewares/logger';
+import { errors } from 'celebrate';
 import { notFound } from './middlewares/not-found';
 import { errorHandler } from './middlewares/error-handler';
-import { errors } from 'celebrate';
+
 //import { MongoClient } from 'mongodb';
 
 //const client = new MongoClient('mongodb://localhost:27017/weblarek');
@@ -20,14 +22,21 @@ const app = express();
 const PORT = 3000;
 app.use(cors());
 app.use(express.json());
+
+app.use(requestLogger);
+
 app.use(productRoutes);
 app.use(orderRoutes);
 app.use(
   '/images',
   express.static(path.join(__dirname, 'dump/images'))
 );
-app.use(errors());
 app.use(notFound);
+
+
+app.use(notFound);
+app.use(errorLogger);
+app.use(errors());
 app.use(errorHandler);
 
 mongoose.connect('mongodb://localhost:27017/weblarek')
