@@ -8,7 +8,7 @@ import cors from 'cors';
 import path from 'path';
 import { notFound } from './middlewares/not-found';
 import { errorHandler } from './middlewares/error-handler';
-
+import { errors } from 'celebrate';
 //import { MongoClient } from 'mongodb';
 
 //const client = new MongoClient('mongodb://localhost:27017/weblarek');
@@ -26,7 +26,7 @@ app.use(
   '/images',
   express.static(path.join(__dirname, 'dump/images'))
 );
-
+app.use(errors());
 app.use(notFound);
 app.use(errorHandler);
 

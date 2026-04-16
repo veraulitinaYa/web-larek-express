@@ -18,7 +18,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^5.2.1",
-    "sass": "^1.99.0"
+    "express-winston": "^4.2.0",
+    "sass": "^1.99.0",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "typescript": "^6.0.2",
