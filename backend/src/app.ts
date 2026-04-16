@@ -6,6 +6,8 @@ import orderRoutes from './routes/order';
 import productModel from './models/product';
 import cors from 'cors';
 import path from 'path';
+import { notFound } from './middlewares/not-found';
+import { errorHandler } from './middlewares/error-handler';
 
 //import { MongoClient } from 'mongodb';
 
@@ -24,6 +26,9 @@ app.use(
   '/images',
   express.static(path.join(__dirname, 'dump/images'))
 );
+
+app.use(notFound);
+app.use(errorHandler);
 
 mongoose.connect('mongodb://localhost:27017/weblarek')
   .then(() => console.log('Подключено к MongoDB'))
