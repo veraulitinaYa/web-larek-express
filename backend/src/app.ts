@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import productRoutes from './routes/product';
+import orderRoutes from './routes/order';
 
 import productModel from './models/product';
 import cors from 'cors';
@@ -18,6 +19,7 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 app.use(productRoutes);
+app.use(orderRoutes);
 app.use(
   '/images',
   express.static(path.join(__dirname, 'dump/images'))
