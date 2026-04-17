@@ -1,54 +1,73 @@
 import { Request, Response, NextFunction } from 'express';
-import productModel from '../models/product';
 import { faker } from '@faker-js/faker';
-import { BadRequestError } from '../errors/bad-request-error';
+import productModel from '../models/product';
+import BadRequestError from '../errors/bad-request-error';
 
-export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
+export default async function createOrder(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
   try {
-    const { payment, email, phone, address, total, items } = req.body;
+    const {
+      payment,
+      email,
+      phone,
+      address,
+      total,
+      items,
+    } = req.body; // FIX: object-curly-newline + max-len
 
     if (!payment || !email || !phone || !address || total === undefined || !items) {
-      return next(new BadRequestError('Не все поля заполнены'));
+      next(new BadRequestError('Не все поля заполнены'));
+      return;
     }
 
     if (!['card', 'online'].includes(payment)) {
-      return next(new BadRequestError('Неверный способ оплаты'));
+      next(new BadRequestError('Неверный способ оплаты'));
+      return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     if (!emailRegex.test(email)) {
-      return next(new BadRequestError('Неверный email'));
+      next(new BadRequestError('Неверный email'));
+      return;
     }
 
     if (!Array.isArray(items) || items.length === 0) {
-      return next(new BadRequestError('items должен быть непустым массивом'));
+      next(new BadRequestError('items должен быть непустым массивом'));
+      return;
     }
 
     const products = await productModel.find({ _id: { $in: items } });
 
     if (products.length !== items.length) {
-      return next(new BadRequestError('Некоторые товары не найдены'));
+      next(new BadRequestError('Некоторые товары не найдены'));
+      return;
     }
 
-    const invalidProduct = products.find(p => p.price === null);
+    const invalidProduct = products.find((p) => p.price === null);
+
     if (invalidProduct) {
-      return next(new BadRequestError('Один из товаров недоступен для продажи'));
+      next(new BadRequestError('Один из товаров недоступен для продажи'));
+      return;
     }
 
     const calculatedTotal = products.reduce((sum, p) => sum + (p.price || 0), 0);
 
     if (calculatedTotal !== total) {
-      return next(new BadRequestError('Неверная сумма заказа'));
+      next(new BadRequestError('Неверная сумма заказа'));
+      return;
     }
 
     const orderId = faker.string.uuid();
 
     res.status(201).json({
       id: orderId,
-      total: calculatedTotal
+      total: calculatedTotal,
     });
-
   } catch (err) {
     next(err);
   }
-};
+}

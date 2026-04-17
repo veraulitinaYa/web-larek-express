@@ -1,6 +1,6 @@
-import { BaseError } from "./base-error";
+import BaseError from './base-error';
 
-export class NotFoundError extends BaseError {
+export default class NotFoundError extends BaseError {
   constructor(message = 'Не найдено') {
     super(message, 404);
   }

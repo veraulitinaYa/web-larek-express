@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { isCelebrateError } from 'celebrate';
-import { BaseError } from '../errors/base-error';
+import BaseError from '../errors/base-error'; // FIX
 
-export const errorHandler = (
+const errorHandler = (
   err: any,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction
-) => {
+  _next: NextFunction,
+): Response => {
   console.error(err);
 
   if (isCelebrateError(err)) {
@@ -28,3 +28,5 @@ export const errorHandler = (
     message: 'Внутренняя ошибка сервера',
   });
 };
+
+export default errorHandler;
