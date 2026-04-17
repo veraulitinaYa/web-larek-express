@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import mongoose from 'mongoose';
 import productRoutes from './routes/product';
@@ -11,15 +13,8 @@ import { errors } from 'celebrate';
 import { notFound } from './middlewares/not-found';
 import { errorHandler } from './middlewares/error-handler';
 
-//import { MongoClient } from 'mongodb';
-
-//const client = new MongoClient('mongodb://localhost:27017/weblarek');
-
-
-
-
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
@@ -31,7 +26,10 @@ app.use(
   '/images',
   express.static(path.join(__dirname, 'dump/images'))
 );
-app.use(notFound);
+
+app.get('/', (req, res) => {
+  res.send('Сервер работает');
+});
 
 
 app.use(notFound);
@@ -39,13 +37,14 @@ app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
-mongoose.connect('mongodb://localhost:27017/weblarek')
+if (!process.env.DB_ADDRESS) {
+  throw new Error('DB_ADDRESS не задан в .env');
+}
+
+mongoose.connect(process.env.DB_ADDRESS as string)
   .then(() => console.log('Подключено к MongoDB'))
 .catch(err => console.error(err));
 
-app.get('/', (req, res) => {
-  res.send('Сервер работает');
-});
 
 app.listen(PORT, () => {
   console.log(`Сервер работает на http://localhost:${PORT}`);
