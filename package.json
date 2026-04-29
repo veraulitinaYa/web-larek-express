@@ -4,8 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:server": "npm --prefix backend run dev",
+    "build:server": "npm --prefix backend run build",
+    "start:server": "npm --prefix backend run start",
+    "lint:server": "npm --prefix backend run lint",
+    "test:server": "npm --prefix backend run test",
+    "dev:client": "npm --prefix frontend run dev",
+    "build:client": "npm --prefix frontend run build",
+    "lint:client": "npm --prefix frontend run lint",
+    "preview:client": "npm --prefix frontend run preview"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^6.0.2",
+    "vite": "^8.0.8"
+  }
 }
